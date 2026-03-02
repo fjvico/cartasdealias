@@ -15,49 +15,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 top: targetPosition,
                 behavior: 'smooth'
             });
-            
-            // Cerrar menú móvil si está abierto
-            const nav = document.querySelector('nav');
-            const menuToggle = document.querySelector('.menu-toggle');
-            if (nav.classList.contains('active')) {
-                nav.classList.remove('active');
-                menuToggle.classList.remove('active');
-            }
         }
     });
 });
-
-// Menú hamburguesa para móvil
-function createMobileMenu() {
-    const header = document.querySelector('.header-content');
-    const nav = document.querySelector('nav');
-    
-    // Crear botón hamburguesa
-    const menuToggle = document.createElement('div');
-    menuToggle.className = 'menu-toggle';
-    menuToggle.innerHTML = `
-        <span></span>
-        <span></span>
-        <span></span>
-    `;
-    
-    // Insertar antes del nav
-    header.insertBefore(menuToggle, nav);
-    
-    // Toggle menú
-    menuToggle.addEventListener('click', () => {
-        nav.classList.toggle('active');
-        menuToggle.classList.toggle('active');
-    });
-    
-    // Cerrar menú al hacer click fuera
-    document.addEventListener('click', (e) => {
-        if (!nav.contains(e.target) && !menuToggle.contains(e.target) && nav.classList.contains('active')) {
-            nav.classList.remove('active');
-            menuToggle.classList.remove('active');
-        }
-    });
-}
 
 // Form submission handler
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
@@ -83,15 +43,11 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzbZZIQlGwaOjRWs0tYPSCazXIgdGrtnExTmVjvVqdpuTpxGk8DM8_uM8r2NU8K6lI/exec';
     
     try {
-        // Simular envío para pruebas (comentar en producción)
-        // await fetch(scriptURL, {
-        //     method: 'POST',
-        //     mode: 'no-cors',
-        //     body: formData
-        // });
-        
-        // Simular éxito para desarrollo
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: formData
+        });
         
         // Éxito
         messageDiv.textContent = '¡Mensaje enviado con éxito! Te contactaremos pronto.';
@@ -120,11 +76,9 @@ window.addEventListener('scroll', function() {
     if (window.scrollY > 100) {
         header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
         header.style.backdropFilter = 'blur(5px)';
-        header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
     } else {
         header.style.backgroundColor = 'white';
         header.style.backdropFilter = 'none';
-        header.style.boxShadow = 'var(--shadow)';
     }
 });
 
@@ -144,32 +98,10 @@ const observer = new IntersectionObserver(function(entries) {
 
 // Observe elements for animation
 document.addEventListener('DOMContentLoaded', function() {
-    // Crear menú móvil
-    if (window.innerWidth <= 768) {
-        createMobileMenu();
-    }
-    
-    // Recrear menú al redimensionar
-    window.addEventListener('resize', function() {
-        const existingMenu = document.querySelector('.menu-toggle');
-        if (window.innerWidth <= 768 && !existingMenu) {
-            createMobileMenu();
-        } else if (window.innerWidth > 768 && existingMenu) {
-            existingMenu.remove();
-            document.querySelector('nav').classList.remove('active');
-        }
-    });
-    
     const elementsToAnimate = document.querySelectorAll('.hero-text, .book-details, .author-content, .podcast-content, .preorder-content, .contact-content');
     
     elementsToAnimate.forEach(element => {
         observer.observe(element);
-    });
-    
-    // Ajustar scroll margin para header fijo
-    const headerHeight = document.querySelector('header').offsetHeight;
-    document.querySelectorAll('section[id]').forEach(section => {
-        section.style.scrollMarginTop = headerHeight + 'px';
     });
 });
 
