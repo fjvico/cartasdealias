@@ -1,34 +1,8 @@
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-            const headerHeight = document.querySelector('header').offsetHeight;
-            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-            
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-            
-            // Cerrar menú móvil si está abierto
-            const nav = document.querySelector('nav');
-            const menuToggle = document.querySelector('.menu-toggle');
-            if (nav.classList.contains('active')) {
-                nav.classList.remove('active');
-                menuToggle.classList.remove('active');
-            }
-        }
-    });
-});
-
-// Menú hamburguesa para móvil
+// Menú hamburguesa mejorado
 function createMobileMenu() {
+    // Verificar si ya existe el menú
+    if (document.querySelector('.menu-toggle')) return;
+    
     const header = document.querySelector('.header-content');
     const nav = document.querySelector('nav');
     
@@ -41,150 +15,84 @@ function createMobileMenu() {
         <span></span>
     `;
     
-    // Insertar antes del nav
-    header.insertBefore(menuToggle, nav);
+    // Crear overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'menu-overlay';
+    document.body.appendChild(overlay);
+    
+    // Insertar botón antes del nav
+    header.appendChild(menuToggle);
     
     // Toggle menú
-    menuToggle.addEventListener('click', () => {
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
         nav.classList.toggle('active');
         menuToggle.classList.toggle('active');
+        overlay.classList.toggle('active');
+        
+        // Prevenir scroll del body cuando el menú está abierto
+        if (nav.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     });
     
-    // Cerrar menú al hacer click fuera
-    document.addEventListener('click', (e) => {
-        if (!nav.contains(e.target) && !menuToggle.contains(e.target) && nav.classList.contains('active')) {
+    // Cerrar menú al hacer click en overlay
+    overlay.addEventListener('click', () => {
+        nav.classList.remove('active');
+        menuToggle.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+    
+    // Cerrar menú al hacer click en un enlace
+    nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
             nav.classList.remove('active');
             menuToggle.classList.remove('active');
-        }
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
     });
 }
 
-// Form submission handler
-document.getElementById('contact-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const form = this;
-    const messageDiv = document.getElementById('form-message');
-    
-    // Mostrar estado de carga
-    const submitButton = form.querySelector('button[type="submit"]');
-    const originalText = submitButton.textContent;
-    submitButton.textContent = 'Enviando...';
-    submitButton.disabled = true;
-    
-    // Obtener datos del formulario
-    const formData = new FormData();
-    formData.append('name', form.querySelector('[name="name"]').value);
-    formData.append('email', form.querySelector('[name="email"]').value);
-    formData.append('subject', form.querySelector('[name="subject"]').value);
-    formData.append('message', form.querySelector('[name="message"]').value);
-    
-    // URL de Google Apps Script
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzbZZIQlGwaOjRWs0tYPSCazXIgdGrtnExTmVjvVqdpuTpxGk8DM8_uM8r2NU8K6lI/exec';
-    
-    try {
-        // Simular envío para pruebas (comentar en producción)
-        // await fetch(scriptURL, {
-        //     method: 'POST',
-        //     mode: 'no-cors',
-        //     body: formData
-        // });
-        
-        // Simular éxito para desarrollo
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Éxito
-        messageDiv.textContent = '¡Mensaje enviado con éxito! Te contactaremos pronto.';
-        messageDiv.className = 'form-message success';
-        form.reset();
-        
-    } catch (error) {
-        // Error
-        messageDiv.textContent = 'Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.';
-        messageDiv.className = 'form-message error';
-    } finally {
-        submitButton.textContent = originalText;
-        submitButton.disabled = false;
-        
-        // Limpiar mensaje después de 6 segundos
-        setTimeout(() => {
-            messageDiv.textContent = '';
-            messageDiv.className = 'form-message';
-        }, 6000);
-    }
-});
-
-// Header background on scroll
-window.addEventListener('scroll', function() {
-    const header = document.querySelector('header');
-    if (window.scrollY > 100) {
-        header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-        header.style.backdropFilter = 'blur(5px)';
-        header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    } else {
-        header.style.backgroundColor = 'white';
-        header.style.backdropFilter = 'none';
-        header.style.boxShadow = 'var(--shadow)';
-    }
-});
-
-// Animation on scroll
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-        }
-    });
-}, observerOptions);
-
-// Observe elements for animation
+// Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    // Crear menú móvil
+    // Crear menú móvil si es necesario
     if (window.innerWidth <= 768) {
         createMobileMenu();
     }
     
     // Recrear menú al redimensionar
+    let resizeTimer;
     window.addEventListener('resize', function() {
-        const existingMenu = document.querySelector('.menu-toggle');
-        if (window.innerWidth <= 768 && !existingMenu) {
-            createMobileMenu();
-        } else if (window.innerWidth > 768 && existingMenu) {
-            existingMenu.remove();
-            document.querySelector('nav').classList.remove('active');
-        }
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            const existingMenu = document.querySelector('.menu-toggle');
+            const existingOverlay = document.querySelector('.menu-overlay');
+            
+            if (window.innerWidth <= 768 && !existingMenu) {
+                createMobileMenu();
+            } else if (window.innerWidth > 768 && existingMenu) {
+                existingMenu.remove();
+                if (existingOverlay) existingOverlay.remove();
+                document.querySelector('nav').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }, 250);
     });
     
+    // Resto del código existente...
     const elementsToAnimate = document.querySelectorAll('.hero-text, .book-details, .author-content, .podcast-content, .preorder-content, .contact-content');
     
     elementsToAnimate.forEach(element => {
         observer.observe(element);
     });
     
-    // Ajustar scroll margin para header fijo
+    // Ajustar scroll margin
     const headerHeight = document.querySelector('header').offsetHeight;
     document.querySelectorAll('section[id]').forEach(section => {
         section.style.scrollMarginTop = headerHeight + 'px';
     });
 });
-
-// Add CSS for animations
-const style = document.createElement('style');
-style.textContent = `
-    .hero-text, .book-details, .author-content, .podcast-content, .preorder-content, .contact-content {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .animate-in {
-        opacity: 1;
-        transform: translateY(0);
-    }
-`;
-document.head.appendChild(style);
