@@ -236,7 +236,9 @@ img {
     .hero-image img {
         border-radius: 8px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        max-width: 400px;
+        width: 100%;
+        max-width: 100%;  /* Así ocupa el ancho del contenedor */
+        height: auto;
         margin: 0 auto;
     }
 
@@ -278,7 +280,9 @@ img {
     .book-cover img {
         border-radius: 8px;
         box-shadow: var(--shadow);
-        max-width: 400px;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
         margin: 0 auto;
     }
 
@@ -327,7 +331,9 @@ img {
     .author-image img {
         border-radius: 50%;
         box-shadow: var(--shadow);
-        max-width: 300px;
+        width: 100%;
+        max-width: 200px;  /* Mantener un máximo pero permitir que se reduzca */
+        height: auto;
         margin: 0 auto;
     }
 
