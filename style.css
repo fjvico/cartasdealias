@@ -375,6 +375,21 @@ img {
         flex: 1;
     }
 
+    .author-platforms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .author-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 4px;
+        font-weight: 600;
+    }
     .podcast-platforms {
         display: flex;
         flex-wrap: wrap;
