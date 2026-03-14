@@ -235,9 +235,11 @@ img {
 
     .hero-image img {
         border-radius: 8px;
-        box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         width: 100%;
         max-width: 100%;  /* Así ocupa el ancho del contenedor */
+        max-height: 500px;
+        object-fit: contain;
         height: auto;
         margin: 0 auto;
     }
@@ -282,6 +284,8 @@ img {
         box-shadow: var(--shadow);
         width: 100%;
         max-width: 100%;
+        max-height: 500px;
+        object-fit: contain;
         height: auto;
         margin: 0 auto;
     }
@@ -666,6 +670,8 @@ img {
         border-radius: 8px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         max-width: 280px;
+        max-height: 400px;
+        object-fit: contain;
         margin: 0 auto;
     }
 
@@ -709,6 +715,8 @@ img {
         border-radius: 8px;
         box-shadow: var(--shadow);
         max-width: 280px;
+        max-height: 400px;
+        object-fit: contain;
         margin: 0 auto;
     }
 
