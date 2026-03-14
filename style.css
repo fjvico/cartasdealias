@@ -234,7 +234,7 @@ img {
     }
 
     .hero-image img {
-        border-radius: 8px;
+        border-radius: 1px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         width: 100%;
         max-width: 100%;  /* Así ocupa el ancho del contenedor */
