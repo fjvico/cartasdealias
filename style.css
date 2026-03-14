@@ -234,7 +234,7 @@ img {
     }
 
     .hero-image img {
-        border-radius: 1px;
+        border-radius: 8px;
         box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
         width: 100%;
         max-width: 100%;  /* Así ocupa el ancho del contenedor */
@@ -278,7 +278,7 @@ img {
     }
 
     .book-cover img {
-        border-radius: 1px;
+        border-radius: 8px;
         box-shadow: var(--shadow);
         width: 100%;
         max-width: 100%;
