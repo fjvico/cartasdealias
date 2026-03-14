@@ -278,7 +278,7 @@ img {
     }
 
     .book-cover img {
-        border-radius: 8px;
+        border-radius: 1px;
         box-shadow: var(--shadow);
         width: 100%;
         max-width: 100%;
