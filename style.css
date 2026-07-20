@@ -406,6 +406,15 @@ img {
         font-weight: 600;
     }
 
+    .platform-link-void {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--secondary-color);
+        color: white;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+
     /* Preorder PC */
     .preorder {
         padding: 100px 0;
